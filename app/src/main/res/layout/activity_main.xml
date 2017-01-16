@@ -10,33 +10,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="local.com.bulk_smsm.MainActivity">
 
-    <Button
-        android:text="Send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Send"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
     <TextView
-        android:text="SMS Message"
-        android:layout_height="128dp"
+        android:text="Phone nr."
+        android:layout_height="wrap_content"
+        android:id="@+id/LabelPhoneNr"
+        android:layout_width="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/LabelSmsMessage"
-        android:layout_width="match_parent" />
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/TextMessage"
-        android:layout_below="@+id/LabelSmsMessage"
+        android:id="@+id/editText"
+        android:layout_below="@+id/LabelPhoneNr"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Message"
+        android:layout_height="wrap_content"
+        android:id="@+id/LabelMessage"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:layout_below="@+id/LabelMessage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Send SMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSendSMS"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -44,8 +65,9 @@
         android:text="Attach File"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/Send"
+        android:id="@+id/btnAttachFile"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/AttachFile" />
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
