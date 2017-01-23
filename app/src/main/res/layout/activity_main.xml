@@ -49,18 +49,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <Button
-        android:text="Send Period"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnSendPeriod"
-        android:elevation="0dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/btnAttachFile"
-        android:layout_toEndOf="@+id/btnAttachFile"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
