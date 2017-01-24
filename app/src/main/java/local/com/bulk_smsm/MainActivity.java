@@ -2,7 +2,10 @@ package local.com.bulk_smsm;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Path;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +35,7 @@ public class MainActivity extends Activity {
     EditText txtphoneNo;
     EditText txtMessage;
     Button btnAttachFile;
+    private static final int FILE_SELECT_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,43 +52,74 @@ public class MainActivity extends Activity {
         });
         btnAttachFile.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                attachFile();
+                showFileChooser();
             }
         });
 
     }
 
-    protected void attachFile(){
-        //Find the directory for the SD Card using the API
-//*Don't* hardcode "/sdcard"
-        File sdcard = Environment.getExternalStorageDirectory();
 
-//Get the text file
-        File file = new File(sdcard,"file.txt");
 
-//Read text from file
-        StringBuilder text = new StringBuilder();
-
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("text/plain");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(this, "Please install a File Manager.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
 
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-            br.close();
-        }
-        catch (IOException e) {
-            //You'll need to add proper error handling here
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FILE_SELECT_CODE:
+                if (resultCode == RESULT_OK) {
+                    // Get the Uri of the selected file
+                    Uri uri = data.getData();
+                    Log.d(TAG, "File Uri: " + uri.toString());
+                    // Get the path
+                    String path = null;
+                    try {
+                        path = FileUtils.getPath(this, uri);
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d(TAG, "File Path: " + path);
+                    // Get the file instance
+                    File file = new File(path);
+                    StringBuilder text = new StringBuilder();
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(file));
+                        String line;
+
+                        while ((line = br.readLine()) != null) {
+                            text.append(line);
+                            text.append('\n');
+                        }
+                        br.close();
+                    }
+                    catch (IOException e) {
+                        //You'll need to add proper error handling here
+                    }
 
 //Find the view by its id
-        TextView tv = (TextView)findViewById(R.id.text_view);
-
+                    TextView tv = (TextView)findViewById(R.id.editTextPhoneNr);
 //Set the text
-        tv.setText(text.toString());
+                    tv.setText(text.toString());
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
+
+
+
 
 //    @Override
 //    protected void onStart() {
