@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
- //   private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
+    //   private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
     Button btnSendSMS;
     EditText txtphoneNo;
     EditText txtMessage;
@@ -59,7 +59,6 @@ public class MainActivity extends Activity {
     }
 
 
-
     private void showFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("text/plain");
@@ -69,7 +68,6 @@ public class MainActivity extends Activity {
                     Intent.createChooser(intent, "Select a File to Upload"),
                     FILE_SELECT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
             Toast.makeText(this, "Please install a File Manager.",
                     Toast.LENGTH_SHORT).show();
         }
@@ -84,14 +82,12 @@ public class MainActivity extends Activity {
                     Uri uri = data.getData();
                     Log.d(TAG, "File Uri: " + uri.toString());
                     // Get the path
-                    String path = null;
-                    try {
-                        path = FileUtils.getPath(this, uri);
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
+                    //String path = FileUtils.getPath(this, uri);
+                    String path = FileUtils.getPath(this, uri);
                     Log.d(TAG, "File Path: " + path);
                     // Get the file instance
+                    // File file = new File(path);
+                    // Initiate the upload
                     File file = new File(path);
                     StringBuilder text = new StringBuilder();
                     try {
@@ -99,17 +95,15 @@ public class MainActivity extends Activity {
                         String line;
 
                         while ((line = br.readLine()) != null) {
-                            text.append(line);
-                            text.append('\n');
+                            text.append(";");
                         }
                         br.close();
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         //You'll need to add proper error handling here
                     }
 
 //Find the view by its id
-                    TextView tv = (TextView)findViewById(R.id.editTextPhoneNr);
+                    EditText tv = (EditText) findViewById(R.id.editTextPhoneNr);
 //Set the text
                     tv.setText(text.toString());
                 }
@@ -121,33 +115,7 @@ public class MainActivity extends Activity {
 
 
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        //Log.i(TAG, "On Start .....");
-//        btnSendSMS = (Button) findViewById(R.id.btnSendSMS);
-//        txtphoneNo = (EditText) findViewById(R.id.editTextPhoneNr);
-//        txtMessage = (EditText) findViewById(R.id.editTextMessage);
-//        btnSendSMS.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                sendSMSMessage();
-//            }
-//        });
-//    }
 
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//       // Log.i(TAG, "On Restart .....");
-//        btnSendSMS = (Button) findViewById(R.id.btnSendSMS);
-//        txtphoneNo = (EditText) findViewById(R.id.editTextPhoneNr);
-//        txtMessage = (EditText) findViewById(R.id.editTextMessage);
-//        btnSendSMS.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                sendSMSMessage();
-//            }
-//        });
-//    }
 
     protected void sendSMSMessage() {
         String phoneNo = txtphoneNo.getText().toString();
@@ -166,9 +134,6 @@ public class MainActivity extends Activity {
             }
         }
     }
-
-
-
 
 
 //    protected void sendSMSMessage() {
