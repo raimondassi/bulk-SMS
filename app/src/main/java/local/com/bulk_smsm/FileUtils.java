@@ -6,11 +6,7 @@ import android.net.Uri;
 
 import java.net.URISyntaxException;
 
-/**
- * Created by ozc on 2017.01.24.
- */
-
-public class FileUtils {
+public class FileUtils{
     public static String getPath(Context context, Uri uri) throws URISyntaxException {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
             String[] projection = { "_data" };
