@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static android.R.attr.data;
+import static android.R.attr.path;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
@@ -61,60 +63,54 @@ public class MainActivity extends Activity {
 
     private void showFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/plain");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        try {
-            startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    FILE_SELECT_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "Please install a File Manager.",
-                    Toast.LENGTH_SHORT).show();
-        }
+        intent.setType("*/*");
+        startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case FILE_SELECT_CODE:
-                if (resultCode == RESULT_OK) {
-                    // Get the Uri of the selected file
-                    Uri uri = data.getData();
-                    Log.d(TAG, "File Uri: " + uri.toString());
-                    // Get the path
-                    //String path = FileUtils.getPath(this, uri);
-                    String path = FileUtils.getPath(this, uri);
-                    Log.d(TAG, "File Path: " + path);
-                    // Get the file instance
-                    // File file = new File(path);
-                    // Initiate the upload
-                    File file = new File(path);
-                    StringBuilder text = new StringBuilder();
-                    try {
-                        BufferedReader br = new BufferedReader(new FileReader(file));
-                        String line;
+            if (requestCode == FILE_SELECT_CODE  && resultCode  == RESULT_OK) {
+                Uri uri = data.getData();
+                Log.d(TAG, "File Uri: " + uri.toString());
+                // Get the path
+                String path = null;
+                try {
+                    path = FileUtils.getPath(uri);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "File Path: " + path);
+                // Get the file instance
+                // File file = new File(path);
+                // Initiate the uploa
 
-                        while ((line = br.readLine()) != null) {
-                            text.append(";");
-                        }
-                        br.close();
-                    } catch (IOException e) {
-                        //You'll need to add proper error handling here
+//Get the text file
+                File file = new File(path);
+
+//Read text from file
+                StringBuilder text = new StringBuilder();
+
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(file));
+                    String line;
+
+                    while ((line = br.readLine()) != null) {
+                        text.append(";");
                     }
+                    br.close();
+                }
+                catch (IOException e) {
+                    //You'll need to add proper error handling here
+                }
 
 //Find the view by its id
-                    EditText tv = (EditText) findViewById(R.id.editTextPhoneNr);
+                EditText tv = (EditText)findViewById(R.id.editTextPhoneNr);
+
 //Set the text
-                    tv.setText(text.toString());
-                }
-                break;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+                tv.setText(text.toString());
+            }
+
     }
-
-
-
-
 
 
     protected void sendSMSMessage() {
@@ -136,50 +132,4 @@ public class MainActivity extends Activity {
     }
 
 
-//    protected void sendSMSMessage() {
-//        if (ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.SEND_SMS)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                    Manifest.permission.SEND_SMS)) {
-//            } else {
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.SEND_SMS},
-//                        MY_PERMISSIONS_REQUEST_SEND_SMS);
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                     String phoneNo = txtphoneNo.getText().toString();
-//                     String message = txtMessage.getText().toString();
-//                     List<String> MobNumber = Arrays.asList(phoneNo.split(";"));
-//                    SmsManager smsManager = SmsManager.getDefault();
-//                    if (MobNumber != null) {
-//                        for (int i = 0; i < MobNumber.size(); i++) {
-//                            String tempMobileNumber = MobNumber.get(i).toString();
-//                            smsManager.sendTextMessage(tempMobileNumber, null, message, null, null);
-//                            try {
-//                                TimeUnit.SECONDS.sleep(1);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                    Toast.makeText(getApplicationContext(), "SMS sent.",
-//                            Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(getApplicationContext(),
-//                            "SMS faild, please try again.", Toast.LENGTH_LONG).show();
-//
-//                }
-//            }
-//        }
-//
-//    }
 }
